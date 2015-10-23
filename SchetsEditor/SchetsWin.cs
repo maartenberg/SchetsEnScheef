@@ -47,6 +47,8 @@ namespace SchetsEditor
                                     , new LijnTool()
                                     , new RechthoekTool()
                                     , new VolRechthoekTool()
+                                    , new OvaalTool()
+                                    , new VolOvaalTool()
                                     , new TekstTool()
                                     , new GumTool()
                                     };
@@ -176,6 +178,19 @@ namespace SchetsEditor
                 cbb.Items.Add(k);
             cbb.SelectedIndex = 0;
             paneel.Controls.Add(cbb);
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // SchetsWin
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "SchetsWin";
+            this.Text = "T";
+            this.ResumeLayout(false);
+
         }
     }
 }
