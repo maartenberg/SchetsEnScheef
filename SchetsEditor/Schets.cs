@@ -70,7 +70,6 @@ namespace SchetsEditor
         {
             Bitmap geladen = new Bitmap(bestandsnaam);
             bitmap = geladen;
-            // bepis shim in schetscontrol maken voor invalidate erna
         }
     }
 }
