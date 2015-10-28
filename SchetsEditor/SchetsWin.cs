@@ -96,9 +96,7 @@ namespace SchetsEditor
             schetscontrol = new SchetsControl();
             schetscontrol.Location = new Point(64, 10);
             schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
-                                       { veranderd = true; };
-            schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
-                                       {   vast=true;  
+                                       {   vast=true; veranderd = true; 
                                            huidigeTool.MuisVast(schetscontrol, mea.Location); 
                                        };
             schetscontrol.MouseMove += (object o, MouseEventArgs mea) =>
