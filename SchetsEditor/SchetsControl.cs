@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.IO;
 
 namespace SchetsEditor
 {   public class SchetsControl : UserControl
@@ -52,6 +53,11 @@ namespace SchetsEditor
         public void VeranderKleurViaMenu(object obj, EventArgs ea)
         {   string kleurNaam = ((ToolStripMenuItem)obj).Text;
             penkleur = Color.FromName(kleurNaam);
+        }
+        public void VanBestand(string bestandsnaam)
+        {
+            schets.VanBestand(bestandsnaam);
+            this.Invalidate();
         }
     }
 }
