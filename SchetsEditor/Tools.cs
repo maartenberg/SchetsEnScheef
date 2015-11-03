@@ -210,9 +210,9 @@ namespace SchetsEditor
                             gelinktevorm.Kwast = new SolidBrush(s.PenKleur);
                             gelinktevorm.pen = new Pen(s.PenKleur, 3);
                         }
+                    }
                     s.Invalidate();
                     break;
-                    }
                 }
             }
         
