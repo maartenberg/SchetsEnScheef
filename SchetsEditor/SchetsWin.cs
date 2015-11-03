@@ -99,7 +99,7 @@ namespace SchetsEditor
         {
             ISchetsTool[] deTools = { new PenTool()         
                                     , new RegenboogPenTool()
-                                    , new MepTool()
+                                    , new EmmerTool()
                                     , new LijnTool()
                                     , new RechthoekTool()
                                     , new VolRechthoekTool()

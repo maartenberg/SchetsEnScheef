@@ -187,8 +187,9 @@ namespace SchetsEditor
         }
     }
     
-    public class MepTool : StartpuntTool
+    public class EmmerTool : StartpuntTool
     {
+        public override string ToString() { return "verf"; }
         public override void Letter(SchetsControl s, char c) { }
         public override void MuisVast(SchetsControl s, Point p)
         {
