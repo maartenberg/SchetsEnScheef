@@ -59,6 +59,7 @@ namespace SchetsEditor
 
     public abstract class TweepuntTool : StartpuntTool
     {
+        protected Point vorigpunt;
         public static Rectangle Punten2Rechthoek(Point p1, Point p2)
         {   return new Rectangle( new Point(Math.Min(p1.X,p2.X), Math.Min(p1.Y,p2.Y))
                                 , new Size (Math.Abs(p1.X-p2.X), Math.Abs(p1.Y-p2.Y))
@@ -100,12 +101,23 @@ namespace SchetsEditor
         public override void Bezig(Graphics g, Point p1, Point p2)
         {   g.DrawRectangle(MaakPen(kwast,3), TweepuntTool.Punten2Rechthoek(p1, p2));
         }
+        public override void MuisDrag(SchetsControl s, Point p)
+        {
+            if (vorigpunt != p)
+            {
+                if (!vorigpunt.IsEmpty)
+                    ControlPaint.DrawReversibleFrame(TweepuntTool.Punten2Rechthoek(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt)), s.PenKleur, FrameStyle.Dashed);
+                ControlPaint.DrawReversibleFrame(TweepuntTool.Punten2Rechthoek(s.PointToScreen(startpunt), s.PointToScreen(p)), s.PenKleur, FrameStyle.Dashed);
+            }
+            vorigpunt = p;
+        }
         public override void MuisLos(SchetsControl s, Point p)
         {
             kwast = new SolidBrush(s.PenKleur);
             KaderVorm vorm = new KaderVorm((SolidBrush)kwast, startpunt, p);
             s.Schets.Vormen.Add(vorm);
             s.Invalidate();
+            vorigpunt = new Point();
         }
     }
     
@@ -122,6 +134,7 @@ namespace SchetsEditor
             RechthoekVorm vorm = new RechthoekVorm(kwast, startpunt, p);
             s.Schets.Vormen.Add(vorm);
             s.Invalidate();
+            vorigpunt = new Point();
         }
     }
 
@@ -129,7 +142,6 @@ namespace SchetsEditor
     {
         protected bool herteken = false;     // overreden in pen-subklasse, stopt vervelend scherm
         protected int Verzamelingnummer = 0;
-        protected Point vorigpunt;
         public override string ToString() { return "lijn"; }
 
         public override void Bezig(Graphics g, Point p1, Point p2)
