@@ -40,6 +40,7 @@ namespace SchetsEditor
         public override void MuisVast(SchetsControl s, Point p)
         {
             verzamelingNummer++;
+            kwast = new SolidBrush(s.PenKleur);
             base.MuisVast(s, p);
         }
 
