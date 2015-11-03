@@ -11,6 +11,7 @@ namespace SchetsEditor
         private Bitmap bitmap;
         private Size grootte;
         public List<PuntVorm> Vormen;
+        public static List<PuntVorm> RedoStack = new List<PuntVorm>();
         
         public Schets()
         {
@@ -51,6 +52,34 @@ namespace SchetsEditor
             bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
         }
 
+        public void Undo()
+        {
+            int nieuwste = Vormen.Count - 1;
+           // RedoStack.Add(nieuwste);
+            if (nieuwste > 0)
+            {
+                RedoStack.Add(Vormen[nieuwste]);
+                Vormen.Remove(Vormen[nieuwste]);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("There is no action to undo.", "Error");
+            }
+        }
+
+        public void Redo()
+        {
+            int nieuwste = RedoStack.Count - 1;
+            if (nieuwste >= 0)
+            {
+                Vormen.Add(RedoStack[nieuwste]);
+                RedoStack.Remove(RedoStack[nieuwste]);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("There is no action to redo.", "Error");
+            }
+        }
         // opdracht 2: opslaan en openen
         public void NaarBestand(string bestandsnaam, int formaat = 1) // sla bitmap op
         {

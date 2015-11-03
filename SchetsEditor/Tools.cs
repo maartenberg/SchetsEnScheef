@@ -20,7 +20,7 @@ namespace SchetsEditor
 
         public virtual void MuisVast(SchetsControl s, Point p)
         {   startpunt = p;
-            kwast = new SolidBrush(s.PenKleur);
+            Schets.RedoStack.Clear();
         }
         public virtual void MuisLos(SchetsControl s, Point p)
         {   //kwast = new SolidBrush(s.PenKleur);
@@ -58,8 +58,8 @@ namespace SchetsEditor
             {
                 verzamelingNummer++;
                 startpunt.X += 20;
-            }
         }
+    }
     }
 
     public abstract class TweepuntTool : StartpuntTool
@@ -280,7 +280,7 @@ namespace SchetsEditor
         public override void Teken(Graphics gr)
         {
             if (sz.IsEmpty)
-                this.sz = gr.MeasureString(letter, font, Startpunt, StringFormat.GenericTypographic);
+            this.sz = gr.MeasureString(letter, font, Startpunt, StringFormat.GenericTypographic);
             gr.DrawString(letter.ToString(), font, Kwast, Startpunt, StringFormat.GenericTypographic);
         }
         public override bool Geklikt(Point klik)
@@ -416,7 +416,7 @@ namespace SchetsEditor
                     Kwast.Color.R.ToString(), Kwast.Color.G.ToString(), Kwast.Color.B.ToString()
                 };
             return String.Join(" ", parameters);
-        }
+    }
     }
 
     public class LijnVorm : TweePuntVorm
@@ -456,17 +456,17 @@ namespace SchetsEditor
                     Math.Sqrt(Math.Pow(Eindpunt.Y - Startpunt.Y, 2) + Math.Pow(Eindpunt.X - Startpunt.X, 2));
             return res;
         }
-    }
+        }
 
     public class RechthoekVorm : TweePuntVorm
-    {
+        {
         protected override string vormType
         {
             get
             {
                 return "Rechthoek";
-            }
         }
+    }
         public RechthoekVorm(Brush kwast, Point startpunt, Point eindpunt) : base(kwast, startpunt, eindpunt)
         {   // omdat het moet?
         }
