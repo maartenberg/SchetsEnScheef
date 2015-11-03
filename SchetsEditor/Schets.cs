@@ -8,10 +8,15 @@ namespace SchetsEditor
     public class Schets
     {
         private Bitmap bitmap;
+        private Size grootte;
+        public List<PuntVorm> Vormen;
         
         public Schets()
         {
             bitmap = new Bitmap(1, 1);
+            Vormen = new List<PuntVorm>();
+            RechthoekVorm achtergrond = new RechthoekVorm(Brushes.White, new Point(0, 0), new Point(1, 1));
+            Vormen.Add(achtergrond);
         }
         public Graphics BitmapGraphics
         {
@@ -19,25 +24,26 @@ namespace SchetsEditor
         }
         public void VeranderAfmeting(Size sz)
         {
-            if (sz.Width > bitmap.Size.Width || sz.Height > bitmap.Size.Height)
-            {
-                Bitmap nieuw = new Bitmap( Math.Max(sz.Width,  bitmap.Size.Width)
-                                         , Math.Max(sz.Height, bitmap.Size.Height)
-                                         );
-                Graphics gr = Graphics.FromImage(nieuw);
-                gr.FillRectangle(Brushes.White, 0, 0, sz.Width, sz.Height);
-                gr.DrawImage(bitmap, 0, 0);
-                bitmap = nieuw;
-            }
+            this.grootte = sz;
+            RechthoekVorm achtergrond = (RechthoekVorm)Vormen[0];
+            achtergrond.Eindpunt = new Point(sz.Width, sz.Height);
+            achtergrond.HerberekenRechthoek();
         }
         public void Teken(Graphics gr)
         {
-            gr.DrawImage(bitmap, 0, 0);
+            //gr.DrawImage(bitmap, 0, 0);
+            foreach (PuntVorm vorm in Vormen)
+            {
+                vorm.Teken(gr);
+            }
         }
         public void Schoon()
         {
-            Graphics gr = Graphics.FromImage(bitmap);
-            gr.FillRectangle(Brushes.White, 0, 0, bitmap.Width, bitmap.Height);
+            //Graphics gr = Graphics.FromImage(bitmap);
+            //gr.FillRectangle(Brushes.White, 0, 0, bitmap.Width, bitmap.Height);
+            Vormen = new List<PuntVorm>();
+            var bg = new RechthoekVorm(Brushes.White, new Point(0,0), new Point(grootte.Width, grootte.Height)); // kan beter?
+            Vormen.Add(bg);
         }
         public void Roteer()
         {
