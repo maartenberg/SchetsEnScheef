@@ -17,6 +17,7 @@ namespace SchetsEditor
         }
         public SchetsControl()
         {   this.BorderStyle = BorderStyle.Fixed3D;
+            this.DoubleBuffered = true;
             this.schets = new Schets();
             this.Paint += this.teken;
             this.Resize += this.veranderAfmeting;
