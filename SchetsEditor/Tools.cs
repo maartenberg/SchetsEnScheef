@@ -129,13 +129,28 @@ namespace SchetsEditor
     {
         protected bool herteken = false;     // overreden in pen-subklasse, stopt vervelend scherm
         protected int Verzamelingnummer = 0;
+        protected Point vorigpunt;
         public override string ToString() { return "lijn"; }
 
         public override void Bezig(Graphics g, Point p1, Point p2)
         {
-            g.DrawLine(MaakPen(this.kwast,3), p1, p2);
+            //g.DrawLine(MaakPen(this.kwast,3), p1, p2);
+            //if (!vorigpunt.IsEmpty)
+            //    ControlPaint.DrawReversibleLine(p1, vorigpunt, Color.Gray);
+            //ControlPaint.DrawReversibleLine(p1, p2, Color.Gray);
+            //vorigpunt = p2;
             //LijnVorm lijn = new LijnVorm(kwast, p1, p2);
             //lijn.Teken(g);
+        }
+        public override void MuisDrag(SchetsControl s, Point p)
+        {
+            if (vorigpunt != p)
+            {
+                if (!vorigpunt.IsEmpty)
+                    ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt), s.PenKleur);
+                ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(p), s.PenKleur);
+            }
+            vorigpunt = p;
         }
 
         public override void MuisLos(SchetsControl s, Point p)
@@ -145,6 +160,9 @@ namespace SchetsEditor
             s.Schets.Vormen.Add(lijn);
             lijn.Teken(s.CreateGraphics());
             if (herteken) s.Invalidate();
+            //if (!vorigpunt.IsEmpty)
+            //    ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt), Color.Gray);
+            vorigpunt = new Point();
         }
     }
 
