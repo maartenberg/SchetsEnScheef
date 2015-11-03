@@ -40,6 +40,7 @@ namespace SchetsEditor
         {
             verzamelingNummer++;
             base.MuisVast(s, p);
+            kwast = new SolidBrush(s.PenKleur);
         }
 
         public override void Letter(SchetsControl s, char c)
@@ -179,11 +180,27 @@ namespace SchetsEditor
                 PuntVorm vorm = s.Schets.Vormen[i];
                 if (vorm.Geklikt(p))
                 {
-                    MessageBox.Show(vorm.ToString(), "Au!");
+                    vorm.Kwast = new SolidBrush(s.PenKleur);
+                    vorm.pen = new Pen(s.PenKleur, 3);
+
+                    // verzamelingen werken nog niet?
+                    if (vorm.VerzamelingNummer != 0)
+                    {
+                        var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
+                        foreach (var gelinktevorm in verzameling)
+                        {
+                            vorm.Kwast = new SolidBrush(s.PenKleur);
+                            vorm.pen = new Pen(s.PenKleur, 3);
+                        }
+                    s.Invalidate();
                     break;
+                    }
                 }
             }
+        
+            
         }
+
         public override void MuisDrag(SchetsControl s, Point p)
         {
             return;
@@ -256,6 +273,7 @@ namespace SchetsEditor
         public SolidBrush Kwast;
         public Point Startpunt;
         public int VerzamelingNummer; // Momenteel alleen gebruikt voor pen-lijnen
+        public Pen pen;
 
         public abstract void Teken(Graphics gr);
         public abstract bool Geklikt(Point klik);
@@ -333,7 +351,7 @@ namespace SchetsEditor
     {
         public Point Eindpunt;
         protected Rectangle rect;
-        protected Pen pen;
+        
         protected abstract string vormType { get; }
 
         public TweePuntVorm(Brush kwast, Point startpunt, Point eindpunt)
