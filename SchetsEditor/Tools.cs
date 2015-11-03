@@ -22,7 +22,7 @@ namespace SchetsEditor
         {   startpunt = p;
         }
         public virtual void MuisLos(SchetsControl s, Point p)
-        {   kwast = new SolidBrush(s.PenKleur);
+        {   //kwast = new SolidBrush(s.PenKleur);
         }
         public abstract void MuisDrag(SchetsControl s, Point p);
         public abstract void Letter(SchetsControl s, char c);
@@ -30,36 +30,34 @@ namespace SchetsEditor
 
     public class TekstTool : StartpuntTool
     {
+        protected int verzamelingNummer = 1;
         public override string ToString() { return "tekst"; }
 
         public override void MuisDrag(SchetsControl s, Point p) { }
 
         public override void Letter(SchetsControl s, char c)
         {
-            if (c >= 32)
+            if (c > 32)
             {
                 Graphics gr = s.MaakBitmapGraphics();
                 var letter = new TekstVorm(c, kwast, startpunt);
+                letter.VerzamelingNummer = verzamelingNummer;
                 s.Schets.Vormen.Add(letter);
                 letter.Teken(gr);   // Letter moet gemeten worden voor we weten hoever we op moeten schuiven
                 startpunt.X += (int)letter.sz.Width;
                 s.Invalidate();
-                //Font font = new Font("Tahoma", 40);
-                //string tekst = c.ToString();
-                //SizeF sz = 
-                //gr.MeasureString(tekst, font, this.startpunt, StringFormat.GenericTypographic);
-                //gr.DrawString   (tekst, font, kwast, 
-                //                              this.startpunt, StringFormat.GenericTypographic);
-                // gr.DrawRectangle(Pens.Black, startpunt.X, startpunt.Y, sz.Width, sz.Height);
-                //startpunt.X += (int)sz.Width;
-                //s.Invalidate();
+            }
+            if (c == 32) //spatie, nieuw woord
+            {
+                verzamelingNummer++;
+                startpunt.X += 20;
             }
         }
     }
 
     public abstract class TweepuntTool : StartpuntTool
     {
-        protected Point vorigpunt;
+        protected Pen previewPen;
         public static Rectangle Punten2Rechthoek(Point p1, Point p2)
         {   return new Rectangle( new Point(Math.Min(p1.X,p2.X), Math.Min(p1.Y,p2.Y))
                                 , new Size (Math.Abs(p1.X-p2.X), Math.Abs(p1.Y-p2.Y))
@@ -73,7 +71,9 @@ namespace SchetsEditor
         }
         public override void MuisVast(SchetsControl s, Point p)
         {   base.MuisVast(s, p);
-            kwast = Brushes.Gray;
+            previewPen = new Pen(s.PenKleur, 1);
+            previewPen.DashStyle = DashStyle.Dash;
+            kwast = new SolidBrush(s.PenKleur);
         }
         public override void MuisDrag(SchetsControl s, Point p)
         {   s.Refresh();
@@ -82,7 +82,7 @@ namespace SchetsEditor
         public override void MuisLos(SchetsControl s, Point p)
         {   base.MuisLos(s, p);
             this.Compleet(s.MaakBitmapGraphics(), this.startpunt, p);
-            s.Invalidate();
+            s.Refresh();
         }
         public override void Letter(SchetsControl s, char c)
         {
@@ -99,25 +99,13 @@ namespace SchetsEditor
         public override string ToString() { return "kader"; }
 
         public override void Bezig(Graphics g, Point p1, Point p2)
-        {   g.DrawRectangle(MaakPen(kwast,3), TweepuntTool.Punten2Rechthoek(p1, p2));
-        }
-        public override void MuisDrag(SchetsControl s, Point p)
-        {
-            if (vorigpunt != p)
-            {
-                if (!vorigpunt.IsEmpty)
-                    ControlPaint.DrawReversibleFrame(TweepuntTool.Punten2Rechthoek(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt)), s.PenKleur, FrameStyle.Dashed);
-                ControlPaint.DrawReversibleFrame(TweepuntTool.Punten2Rechthoek(s.PointToScreen(startpunt), s.PointToScreen(p)), s.PenKleur, FrameStyle.Dashed);
-            }
-            vorigpunt = p;
+        {   g.DrawRectangle(previewPen, TweepuntTool.Punten2Rechthoek(p1, p2));
         }
         public override void MuisLos(SchetsControl s, Point p)
         {
-            kwast = new SolidBrush(s.PenKleur);
             KaderVorm vorm = new KaderVorm((SolidBrush)kwast, startpunt, p);
             s.Schets.Vormen.Add(vorm);
-            s.Invalidate();
-            vorigpunt = new Point();
+            s.Refresh();
         }
     }
     
@@ -125,16 +113,11 @@ namespace SchetsEditor
     {
         public override string ToString() { return "vlak"; }
 
-        public override void Compleet(Graphics g, Point p1, Point p2)
-        {   //g.FillRectangle(kwast, TweepuntTool.Punten2Rechthoek(p1, p2));
-        }
         public override void MuisLos(SchetsControl s, Point p)
         {
-            kwast = new SolidBrush(s.PenKleur);
             RechthoekVorm vorm = new RechthoekVorm(kwast, startpunt, p);
             s.Schets.Vormen.Add(vorm);
             s.Invalidate();
-            vorigpunt = new Point();
         }
     }
 
@@ -146,23 +129,7 @@ namespace SchetsEditor
 
         public override void Bezig(Graphics g, Point p1, Point p2)
         {
-            //g.DrawLine(MaakPen(this.kwast,3), p1, p2);
-            //if (!vorigpunt.IsEmpty)
-            //    ControlPaint.DrawReversibleLine(p1, vorigpunt, Color.Gray);
-            //ControlPaint.DrawReversibleLine(p1, p2, Color.Gray);
-            //vorigpunt = p2;
-            //LijnVorm lijn = new LijnVorm(kwast, p1, p2);
-            //lijn.Teken(g);
-        }
-        public override void MuisDrag(SchetsControl s, Point p)
-        {
-            if (vorigpunt != p)
-            {
-                if (!vorigpunt.IsEmpty)
-                    ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt), s.PenKleur);
-                ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(p), s.PenKleur);
-            }
-            vorigpunt = p;
+            g.DrawLine(previewPen, p1, p2);
         }
 
         public override void MuisLos(SchetsControl s, Point p)
@@ -172,9 +139,6 @@ namespace SchetsEditor
             s.Schets.Vormen.Add(lijn);
             lijn.Teken(s.CreateGraphics());
             if (herteken) s.Invalidate();
-            //if (!vorigpunt.IsEmpty)
-            //    ControlPaint.DrawReversibleLine(s.PointToScreen(startpunt), s.PointToScreen(vorigpunt), Color.Gray);
-            vorigpunt = new Point();
         }
     }
 
@@ -248,16 +212,9 @@ namespace SchetsEditor
 
     public class OvaalTool : TweepuntTool
     {
-        protected Pen previewPen;
         public override string ToString()
         {
             return "ellips";
-        }
-        public override void MuisVast(SchetsControl s, Point p)
-        {
-            previewPen = new Pen(s.PenKleur, 1);
-            previewPen.DashStyle = DashStyle.Dash;
-            base.MuisVast(s, p);
         }
         public override void Bezig(Graphics g, Point p1, Point p2)
         {
@@ -286,7 +243,7 @@ namespace SchetsEditor
         }
     }
 
-    // Het nieuwe gummen en gerelateerd hieronder
+    // Vormen hieronder
     public abstract class PuntVorm
     {
         public SolidBrush Kwast;
@@ -316,7 +273,8 @@ namespace SchetsEditor
         }
         public override void Teken(Graphics gr)
         {
-            this.sz = gr.MeasureString(letter, font, Startpunt, StringFormat.GenericTypographic);
+            if (sz.IsEmpty)
+                this.sz = gr.MeasureString(letter, font, Startpunt, StringFormat.GenericTypographic);
             gr.DrawString(letter.ToString(), font, Kwast, Startpunt, StringFormat.GenericTypographic);
         }
         public override bool Geklikt(Point klik)
@@ -360,6 +318,7 @@ namespace SchetsEditor
 
     public class LijnVorm : TweePuntVorm
     {
+        static int klikHulp = 5;
         public LijnVorm(Brush kwast, Point startpunt, Point eindpunt, int verzamelingnr = 0) : base(kwast, startpunt, eindpunt)
         {
             this.VerzamelingNummer = verzamelingnr;
@@ -370,15 +329,14 @@ namespace SchetsEditor
         }
         public override void HerberekenRechthoek()
         {   // Omdat sommige met de pen gemaakte lijnen heel kort kunnen zijn moet de rechthoek iets groter zijn
-            int VERGROTER = 5;
             Point linksboven, rechtsonder;
-            linksboven = new Point(Math.Min(Startpunt.X, Eindpunt.X) - VERGROTER, Math.Min(Startpunt.Y, Eindpunt.Y) - VERGROTER);
-            rechtsonder = new Point(Math.Max(Startpunt.X, Eindpunt.X) + VERGROTER, Math.Max(Startpunt.Y, Eindpunt.Y) + VERGROTER);
+            linksboven = new Point(Math.Min(Startpunt.X, Eindpunt.X) - klikHulp, Math.Min(Startpunt.Y, Eindpunt.Y) - klikHulp);
+            rechtsonder = new Point(Math.Max(Startpunt.X, Eindpunt.X) + klikHulp, Math.Max(Startpunt.Y, Eindpunt.Y) + klikHulp);
             this.rect = RechthoekTool.Punten2Rechthoek(linksboven, rechtsonder);
         }
         public override bool Geklikt(Point klik)
         {
-            return this.BerekenAfstand(klik) < 5 && rect.Contains(klik);    // Tweede is omdat de lijn doorloopt, rect beperkt ons tot de lijn.
+            return this.BerekenAfstand(klik) < 5 && rect.Contains(klik);    // Tweede is omdat de lijn doorloopt, door de rect worden we beperkt tot de buurt van de lijn.
         }
         public double BerekenAfstand(Point klik)
         {
