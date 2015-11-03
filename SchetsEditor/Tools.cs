@@ -189,8 +189,8 @@ namespace SchetsEditor
                         var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
                         foreach (var gelinktevorm in verzameling)
                         {
-                            vorm.Kwast = new SolidBrush(s.PenKleur);
-                            vorm.pen = new Pen(s.PenKleur, 3);
+                            gelinktevorm.Kwast = new SolidBrush(s.PenKleur);
+                            gelinktevorm.pen = new Pen(s.PenKleur, 3);
                         }
                     s.Invalidate();
                     break;
