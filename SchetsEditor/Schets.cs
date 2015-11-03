@@ -58,8 +58,22 @@ namespace SchetsEditor
            // RedoStack.Add(nieuwste);
             if (nieuwste > 0)
             {
-                RedoStack.Add(Vormen[nieuwste]);
-                Vormen.Remove(Vormen[nieuwste]);
+                PuntVorm beginVorm = Vormen[nieuwste];      // Zodat het aantal in Vormen kan veranderen
+                RedoStack.Add(beginVorm);
+                if (Vormen[nieuwste].VerzamelingNummer != 0)
+                {
+                    // Er zijn waarschijnlijk gelinkte vormen aanwezig, die moeten er ook uit:
+                    // De volgende methode geeft ons een lijst van alle vormen met hetzelfde VerzamelingNummer als beginVorm:
+                    List<PuntVorm> gelinkteVormen = Vormen.FindAll(zoekVorm => zoekVorm.VerzamelingNummer == beginVorm.VerzamelingNummer);
+
+                    // Al deze vormen gooien we in de redoStack en daarna uit Vormen:
+                    foreach (PuntVorm gelinkteVorm in gelinkteVormen)
+                    {
+                        RedoStack.Add(gelinkteVorm);
+                        Vormen.Remove(gelinkteVorm);
+                    }
+                }
+                Vormen.Remove(beginVorm);
             }
             else
             {
@@ -72,8 +86,20 @@ namespace SchetsEditor
             int nieuwste = RedoStack.Count - 1;
             if (nieuwste >= 0)
             {
-                Vormen.Add(RedoStack[nieuwste]);
-                RedoStack.Remove(RedoStack[nieuwste]);
+                PuntVorm beginVorm = RedoStack[nieuwste];
+                Vormen.Add(beginVorm);
+                if (beginVorm.VerzamelingNummer != 0)
+                {
+                    List<PuntVorm> gelinkteVormen = RedoStack.FindAll(zoekVorm => zoekVorm.VerzamelingNummer == beginVorm.VerzamelingNummer);
+
+                    // Al deze vormen gooien we in de redoStack en daarna uit Vormen:
+                    foreach (PuntVorm gelinkteVorm in gelinkteVormen)
+                    {
+                        Vormen.Add(gelinkteVorm);
+                        RedoStack.Remove(gelinkteVorm);
+                    }
+                }
+                RedoStack.Remove(beginVorm);
             }
             else
             {
