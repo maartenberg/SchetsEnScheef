@@ -182,8 +182,7 @@ namespace SchetsEditor
                 {
                     vorm.Kwast = new SolidBrush(s.PenKleur);
                     vorm.pen = new Pen(s.PenKleur, 3);
-
-                    // verzamelingen werken nog niet?
+                    
                     if (vorm.VerzamelingNummer != 0)
                     {
                         var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
