@@ -156,6 +156,8 @@ namespace SchetsEditor
             ToolStripMenuItem menu = new ToolStripMenuItem("Aktie");
             menu.DropDownItems.Add("Clear", null, schetscontrol.Schoon );
             menu.DropDownItems.Add("Roteer", null, schetscontrol.Roteer );
+            menu.DropDownItems.Add("Undo", null, schetscontrol.Undo);
+            menu.DropDownItems.Add("Redo", null, schetscontrol.Redo);
             ToolStripMenuItem submenu = new ToolStripMenuItem("Kies kleur");
             foreach (string k in kleuren)
                 submenu.DropDownItems.Add(k, null, schetscontrol.VeranderKleurViaMenu);
@@ -216,6 +218,20 @@ namespace SchetsEditor
                 cbb.Items.Add(k);
             cbb.SelectedIndex = 0;
             paneel.Controls.Add(cbb);
+
+            b = new Button();
+            b.Text = "Undo";
+            b.Location = new Point(370, 0);
+            b.AutoSize = true;
+            b.Click += schetscontrol.Undo;
+            paneel.Controls.Add(b);
+
+            b = new Button();
+            b.Text = "Redo";
+            b.Location = new Point(450, 0);
+            b.AutoSize = true;
+            b.Click += schetscontrol.Redo;
+            paneel.Controls.Add(b);
         }
 
         private void InitializeComponent()

@@ -43,6 +43,19 @@ namespace SchetsEditor
             schets.Roteer();
             this.Invalidate();
         }
+
+        public void Undo(object o, EventArgs ea)
+        {
+            schets.Undo();
+            this.Invalidate();
+        }
+
+        public void Redo(object o, EventArgs ea)
+        {
+            schets.Redo();
+            this.Invalidate();
+        }
+
         public void VeranderKleur(object obj, EventArgs ea)
         {   string kleurNaam = ((ComboBox)obj).Text;
             penkleur = Color.FromName(kleurNaam);

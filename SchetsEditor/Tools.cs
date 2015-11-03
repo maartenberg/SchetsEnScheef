@@ -20,6 +20,7 @@ namespace SchetsEditor
 
         public virtual void MuisVast(SchetsControl s, Point p)
         {   startpunt = p;
+            Schets.RedoStack.Clear();
         }
         public virtual void MuisLos(SchetsControl s, Point p)
         {   kwast = new SolidBrush(s.PenKleur);
