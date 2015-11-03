@@ -20,6 +20,7 @@ namespace SchetsEditor
 
         public virtual void MuisVast(SchetsControl s, Point p)
         {   startpunt = p;
+            kwast = new SolidBrush(s.PenKleur);
         }
         public virtual void MuisLos(SchetsControl s, Point p)
         {   //kwast = new SolidBrush(s.PenKleur);
@@ -34,6 +35,12 @@ namespace SchetsEditor
         public override string ToString() { return "tekst"; }
 
         public override void MuisDrag(SchetsControl s, Point p) { }
+
+        public override void MuisVast(SchetsControl s, Point p)
+        {
+            verzamelingNummer++;
+            base.MuisVast(s, p);
+        }
 
         public override void Letter(SchetsControl s, char c)
         {
@@ -195,7 +202,7 @@ namespace SchetsEditor
                     s.Schets.Vormen.Remove(vorm);
                     if (vorm.VerzamelingNummer != 0)
                     {
-                        var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer);
+                        var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
                         foreach (var gelinktevorm in verzameling) s.Schets.Vormen.Remove(gelinktevorm);
                     }
                     s.Invalidate();
