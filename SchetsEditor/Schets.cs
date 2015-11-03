@@ -125,7 +125,10 @@ namespace SchetsEditor
                     opslagformaat = ImageFormat.Png;
                     break;
             }
-            bitmap.Save(bestandsnaam, opslagformaat);
+            Point groottePunt = ((TweePuntVorm)Vormen[0]).Eindpunt;
+            Bitmap tijdelijkeAfbeelding = new Bitmap(groottePunt.X, groottePunt.Y);
+            this.Teken(Graphics.FromImage(tijdelijkeAfbeelding));
+            tijdelijkeAfbeelding.Save(bestandsnaam, opslagformaat);
         }
         public void NaarSchetsBestand(string bestandsnaam)
         {

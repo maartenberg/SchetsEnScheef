@@ -98,6 +98,7 @@ namespace SchetsEditor
         public SchetsWin()
         {
             ISchetsTool[] deTools = { new PenTool()         
+                                    , new RegenboogPenTool()
                                     , new MepTool()
                                     , new LijnTool()
                                     , new RechthoekTool()

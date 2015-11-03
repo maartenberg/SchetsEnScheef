@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace SchetsEditor
 {
@@ -141,7 +142,6 @@ namespace SchetsEditor
 
         public override void MuisLos(SchetsControl s, Point p)
         {
-            kwast = new SolidBrush(s.PenKleur);
             LijnVorm lijn = new LijnVorm(kwast, startpunt, p, Verzamelingnummer);
             s.Schets.Vormen.Add(lijn);
             lijn.Teken(s.CreateGraphics());
@@ -166,6 +166,22 @@ namespace SchetsEditor
         public override void MuisDrag(SchetsControl s, Point p)
         {   base.MuisLos(s, p);
             this.MuisVast(s, p);
+        } 
+    }
+    public class RegenboogPenTool : PenTool
+    {
+        private int doorteller = 0;
+        private static List<Color> kleuren = new List<Color>(
+            new Color[8] { Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Purple, Color.Violet }
+            );
+
+        public override string ToString() { return "Regenboog"; }
+
+        public override void MuisDrag(SchetsControl s, Point p)
+        {
+            this.kwast = new SolidBrush(kleuren[doorteller]);
+            base.MuisDrag(s, p);
+            doorteller = (doorteller + 1) % 8;
         }
     }
     
