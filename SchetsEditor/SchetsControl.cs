@@ -54,7 +54,8 @@ namespace SchetsEditor
         }
         public void VanBestand(string bestandsnaam)
         {
-            schets.VanBestand(bestandsnaam);
+            schets.LeesBestand(bestandsnaam);
+            Point grootte = ((RechthoekVorm)schets.Vormen[0]).Eindpunt;
             this.Invalidate();
         }
     }

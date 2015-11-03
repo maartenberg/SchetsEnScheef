@@ -14,7 +14,7 @@ namespace SchetsEditor
             this.Controls.Add(menuStrip);
             this.maakFileMenu();
             this.maakHelpMenu();
-            this.Text = "Schets editor";
+            this.Text = "Schetsy";
             this.IsMdiContainer = true;
             this.MainMenuStrip = menuStrip;
         }
@@ -22,6 +22,7 @@ namespace SchetsEditor
         {   ToolStripDropDownItem menu;
             menu = new ToolStripMenuItem("File");
             menu.DropDownItems.Add("Nieuw", null, this.nieuw);
+            menu.DropDownItems.Add("Open in venster", null, this.openvenster);
             menu.DropDownItems.Add("Exit", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }
@@ -43,6 +44,24 @@ namespace SchetsEditor
         {   SchetsWin s = new SchetsWin();
             s.MdiParent = this;
             s.Show();
+        }
+        private void openvenster(object sender, EventArgs e)
+        {
+            OpenFileDialog openKiezer = new OpenFileDialog();
+
+            openKiezer.Filter = "Schetsbestanden (*.SCHETS)|*.SCHETS|" +
+                                "Alle bestanden (*.*)|*.*";
+            openKiezer.Title = "Schets openen in nieuw venster";
+
+            DialogResult resultaat = openKiezer.ShowDialog();
+            if (resultaat == DialogResult.OK)
+            {
+                string bestandsnaam = openKiezer.FileName;
+                SchetsWin s = new SchetsWin();
+                s.MdiParent = this;
+                s.OpenBestand(bestandsnaam);
+                s.Show();
+            }
         }
         private void afsluiten(object sender, EventArgs e)
         {   this.Close();

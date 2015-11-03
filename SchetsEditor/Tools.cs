@@ -263,7 +263,6 @@ namespace SchetsEditor
             return vorm.VerzamelingNummer == nummer;
         }
 
-        public abstract void VanString(string s);   // Voor laden
 
     }
     public class TekstVorm : PuntVorm
@@ -291,15 +290,42 @@ namespace SchetsEditor
         }
         public override string ToString()
         {
-            string[] waarden = new string[5]
+            // Formaat: "letter [letter] [verzamelingnummer][x] [y] [r] [g] [b]
+            string[] waarden = new string[8]
             {
-                "letter", letter, this.Startpunt.X.ToString(), this.Startpunt.Y.ToString(), Kwast.Color.ToString()
+                "letter", letter, this.VerzamelingNummer.ToString(),
+                this.Startpunt.X.ToString(), this.Startpunt.Y.ToString(),
+                Kwast.Color.R.ToString(), Kwast.Color.G.ToString(), Kwast.Color.B.ToString()
             };
             return String.Join(" ", waarden);
         }
-        public override void VanString(string s)
+        public static PuntVorm VanString(string s)
         {
-            throw new NotImplementedException();
+            PuntVorm resultaat;
+            char[] separators = new char[1] { ' ' };
+            string[] parameters = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            char gelezenLetter = char.Parse(parameters[1]);
+            int gelezenVerzamelingNummer = int.Parse(parameters[2]);
+
+            // Lees startpunt
+            int gelezenX, gelezenY;
+            gelezenX = int.Parse(parameters[3]);
+            gelezenY = int.Parse(parameters[4]);
+            Point gelezenStartpunt = new Point(gelezenX, gelezenY);
+
+            // Lees kleur
+            int r, g, b;
+            r = int.Parse(parameters[5]);
+            g = int.Parse(parameters[6]);
+            b = int.Parse(parameters[7]);
+            SolidBrush gelezenKwast = new SolidBrush(Color.FromArgb(r, g, b));
+
+            // Maak vorm
+            resultaat = new TekstVorm(gelezenLetter, gelezenKwast, gelezenStartpunt);
+            resultaat.VerzamelingNummer = gelezenVerzamelingNummer;
+
+            return resultaat;
         }
     }
 
@@ -308,6 +334,7 @@ namespace SchetsEditor
         public Point Eindpunt;
         protected Rectangle rect;
         protected Pen pen;
+        protected abstract string vormType { get; }
 
         public TweePuntVorm(Brush kwast, Point startpunt, Point eindpunt)
         {
@@ -321,10 +348,86 @@ namespace SchetsEditor
         {
             this.rect = TweepuntTool.Punten2Rechthoek(Startpunt, Eindpunt);
         }
+        public static PuntVorm VanString(string s)
+        {
+            // Formaat: "[vormtype] [verzamelingnummer] [startx] [starty] [eindx] [eindy] [r] [g] [b]"
+            PuntVorm resultaat;
+            char[] separators = new char[1] { ' ' };
+            string[] parameters = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parameters.Length != 9)
+            {
+                //  fout!
+                MessageBox.Show(s, "FOEI!"); //todo betere foutmelding
+                return null;
+            }
+            // Lees verzamelingnummer
+            int geladenVerzamelingNummer = int.Parse(parameters[1]);
+
+            // Lees startpunt, eindpunt
+            Point geladenStartpunt, geladenEindpunt;
+            int x1, y1, x2, y2;
+            x1 = int.Parse(parameters[2]);
+            y1 = int.Parse(parameters[3]);
+            geladenStartpunt = new Point(x1, y1);
+            x2 = int.Parse(parameters[4]);
+            y2 = int.Parse(parameters[5]);
+            geladenEindpunt = new Point(x2, y2);
+
+            // Lees kleur
+            int r, g, b;
+            r = int.Parse(parameters[6]);
+            g = int.Parse(parameters[7]);
+            b = int.Parse(parameters[8]);
+            Color kleur = Color.FromArgb(r, g, b);
+            SolidBrush kwast = new SolidBrush(kleur);
+
+            switch (parameters[0])
+            {
+                case "Lijn":
+                    resultaat = new LijnVorm(kwast, geladenStartpunt, geladenEindpunt, geladenVerzamelingNummer);
+                    break;
+                case "Kader":
+                    resultaat = new KaderVorm(kwast, geladenStartpunt, geladenEindpunt);
+                    break;
+                case "Rechthoek":
+                    resultaat = new RechthoekVorm(kwast, geladenStartpunt, geladenEindpunt);
+                    break;
+                case "GevuldeEllips":
+                    resultaat = new VollipsVorm(kwast, geladenStartpunt, geladenEindpunt);
+                    break;
+                case "Ellips":
+                    resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt);
+                    break;
+                default:
+                    MessageBox.Show(s, "WASDA?");
+                    resultaat = null;
+                    break;
+            }
+            return resultaat;
+        }
+        public override string ToString()
+        {
+            // Formaat: "[vormtype] [verzamelingnummer] [startx] [starty] [eindx] [eindy] [r] [g] [b]"
+            string[] parameters = new string[9] 
+                { vormType, VerzamelingNummer.ToString(),
+                    Startpunt.X.ToString(), Startpunt.Y.ToString(),
+                    Eindpunt.X.ToString(), Eindpunt.Y.ToString(),
+                    Kwast.Color.R.ToString(), Kwast.Color.G.ToString(), Kwast.Color.B.ToString()
+                };
+            return String.Join(" ", parameters);
+        }
     }
 
     public class LijnVorm : TweePuntVorm
     {
+        protected override string vormType
+        {
+            get
+            {
+                return "Lijn";
+            }
+        }
         static int klikHulp = 5;
         public LijnVorm(Brush kwast, Point startpunt, Point eindpunt, int verzamelingnr = 0) : base(kwast, startpunt, eindpunt)
         {
@@ -353,22 +456,17 @@ namespace SchetsEditor
                     Math.Sqrt(Math.Pow(Eindpunt.Y - Startpunt.Y, 2) + Math.Pow(Eindpunt.X - Startpunt.X, 2));
             return res;
         }
-        public override void VanString(string s)
-        {
-            throw new NotImplementedException();
-        }
-        public override string ToString()
-        {
-            string[] parameters = new string[6] 
-                { "lijn", VerzamelingNummer.ToString(),
-                    Startpunt.X.ToString(), Startpunt.Y.ToString(),
-                    Eindpunt.X.ToString(), Eindpunt.Y.ToString() };
-            return String.Join(" ", parameters);
-        }
     }
 
     public class RechthoekVorm : TweePuntVorm
     {
+        protected override string vormType
+        {
+            get
+            {
+                return "Rechthoek";
+            }
+        }
         public RechthoekVorm(Brush kwast, Point startpunt, Point eindpunt) : base(kwast, startpunt, eindpunt)
         {   // omdat het moet?
         }
@@ -377,10 +475,6 @@ namespace SchetsEditor
             return rect.Contains(klik);
         }
 
-        public override void VanString(string s)
-        {
-            throw new NotImplementedException();
-        }
         public override void Teken(Graphics gr)
         {
             gr.FillRectangle(Kwast, rect);
@@ -388,6 +482,13 @@ namespace SchetsEditor
     }
     public class KaderVorm : RechthoekVorm
     {
+        protected override string vormType
+        {
+            get
+            {
+                return "Kader";
+            }
+        }
         public KaderVorm(SolidBrush kwast, Point startpunt, Point eindpunt) : base(kwast, startpunt, eindpunt)
         {
         }
@@ -413,6 +514,13 @@ namespace SchetsEditor
 
     public class EllipsVorm : KaderVorm
     {
+        protected override string vormType
+        {
+            get
+            {
+                return "Ellips";
+            }
+        }
         protected int halveHoogte, halveBreedte, middelX, middelY; // Gebruikt in berekenen of er in/op de ellips is geklikt
         public EllipsVorm(SolidBrush kwast, Point startpunt, Point eindpunt) : base(kwast, startpunt, eindpunt)
         {
@@ -450,6 +558,13 @@ namespace SchetsEditor
     }
     public class VollipsVorm : EllipsVorm
     {
+        protected override string vormType
+        {
+            get
+            {
+                return "GevuldeEllips";
+            }
+        }
         public VollipsVorm(SolidBrush kwast, Point startpunt, Point eindpunt) : base(kwast, startpunt, eindpunt)
         {
             // todo hoe geen body

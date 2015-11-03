@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -51,7 +52,7 @@ namespace SchetsEditor
         }
 
         // opdracht 2: opslaan en openen
-        public void NaarBestand(string bestandsnaam, int formaat = 1)
+        public void NaarBestand(string bestandsnaam, int formaat = 1) // sla bitmap op
         {
             ImageFormat opslagformaat;
             switch (formaat)
@@ -71,11 +72,43 @@ namespace SchetsEditor
             }
             bitmap.Save(bestandsnaam, opslagformaat);
         }
+        public void NaarSchetsBestand(string bestandsnaam)
+        {
+            StreamWriter bestand = new StreamWriter(bestandsnaam);
+            foreach (PuntVorm vorm in Vormen)
+            {
+                bestand.WriteLine(vorm.ToString());
+            }
+            bestand.Close();
+        }
 
         public void VanBestand(string bestandsnaam)
         {
             Bitmap geladen = new Bitmap(bestandsnaam);
             bitmap = geladen;
+        }
+        public void LeesBestand(string bestandsnaam)
+        {
+            StreamReader bestand = new StreamReader(bestandsnaam);
+            string inhoud;
+            PuntVorm gelezenVorm = null;
+            string[] parameters;
+            while ((inhoud = bestand.ReadLine()) != null)
+            {
+                char[] separators = new char[1] { ' ' };
+                parameters = inhoud.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                switch (parameters.Length)
+                {
+                    case 8:
+                        gelezenVorm = TekstVorm.VanString(inhoud);
+                        break;
+                    case 9:
+                        gelezenVorm = TweePuntVorm.VanString(inhoud);
+                        break;
+                }
+                if (gelezenVorm != null)
+                    this.Vormen.Add(gelezenVorm);
+            }
         }
     }
 }

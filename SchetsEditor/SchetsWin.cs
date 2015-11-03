@@ -58,14 +58,34 @@ namespace SchetsEditor
                 veranderd = false;
             }
         }
+        private void naarschetsbestand(object obj, EventArgs ea)
+        {
+            SaveFileDialog opslagKiezer = new SaveFileDialog();
 
+            opslagKiezer.Filter = "SCHETS-bestand|*.SCHETS";
+            opslagKiezer.Title = "Schets opslaan";
+
+            DialogResult resultaat = opslagKiezer.ShowDialog();
+            if (resultaat == DialogResult.OK)
+            {
+                string bestandsnaam = opslagKiezer.FileName;
+                this.schetscontrol.Schets.NaarSchetsBestand(bestandsnaam);
+                veranderd = false;
+            }
+        }
+
+
+        public void OpenBestand(string bestandsnaam)
+        {
+            schetscontrol.VanBestand(bestandsnaam);
+        }
         private void vanbestand(object obj, EventArgs ea)
         {
             OpenFileDialog openKiezer = new OpenFileDialog();
 
-            openKiezer.Filter = "Afbeeldingen (*.PNG;*.JPG;*.BMP)|*.PNG;*.JPG;*.BMP|" +
+            openKiezer.Filter = "Schetsbestanden (*.SCHETS)|*.SCHETS|" +
                                 "Alle bestanden (*.*)|*.*";
-            openKiezer.Title = "Schets openen";
+            openKiezer.Title = "Schets openen in huidig venster";
 
             DialogResult resultaat = openKiezer.ShowDialog();
             if (resultaat == DialogResult.OK)
@@ -131,7 +151,8 @@ namespace SchetsEditor
         {   
             ToolStripMenuItem menu = new ToolStripMenuItem("File");
             menu.MergeAction = MergeAction.MatchOnly;
-            menu.DropDownItems.Add("Opslaan", null, this.naarbestand);
+            menu.DropDownItems.Add("Opslaan", null, naarschetsbestand);
+            menu.DropDownItems.Add("Exporteren", null, this.naarbestand);
             menu.DropDownItems.Add("Openen", null, this.vanbestand);
             menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
             menuStrip.Items.Add(menu);
