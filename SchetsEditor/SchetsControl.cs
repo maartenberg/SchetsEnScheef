@@ -9,7 +9,7 @@ namespace SchetsEditor
     {   private Schets schets;
         private ColorDialog kleurenKiezer;
         private Color penkleur;
-        private int pendikte;
+        private int pendikte = 3;
 
         public Color PenKleur
         { get { return penkleur; }

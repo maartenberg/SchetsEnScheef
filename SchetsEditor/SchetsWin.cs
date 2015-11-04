@@ -272,6 +272,7 @@ namespace SchetsEditor
             num = new NumericUpDown();
             num.Location = new Point(570, 0);
             num.Minimum = 1;
+            num.Value = 3;
             num.Maximum = 50;
             num.Width = 50;
             num.ValueChanged += schetscontrol.VeranderDikte;
