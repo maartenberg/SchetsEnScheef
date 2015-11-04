@@ -65,7 +65,7 @@ namespace SchetsEditor
 
         public void VeranderKleur(object obj, EventArgs ea)
         {   string kleurNaam = ((ComboBox)obj).Text;
-            if (kleurNaam != "Aangepast")
+            if (kleurNaam != "Other")
             {
                 penkleur = Color.FromName(kleurNaam);
             }
@@ -78,7 +78,7 @@ namespace SchetsEditor
         }
         public void VeranderKleurViaMenu(object obj, EventArgs ea)
         {   string kleurNaam = ((ToolStripMenuItem)obj).Text;
-            if (kleurNaam != "Aangepast")
+            if (kleurNaam != "Other")
             {
                 penkleur = Color.FromName(kleurNaam);
                 return;
