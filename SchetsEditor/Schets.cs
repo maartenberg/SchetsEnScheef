@@ -52,7 +52,7 @@ namespace SchetsEditor
         public void Undo()
         {
             int nieuwste = Vormen.Count - 1;
-           // RedoStack.Add(nieuwste);
+           
             if (nieuwste > 0)
             {
                 PuntVorm beginVorm = Vormen[nieuwste];      // Zodat het aantal in Vormen kan veranderen

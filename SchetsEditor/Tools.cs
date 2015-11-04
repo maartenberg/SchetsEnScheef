@@ -24,7 +24,7 @@ namespace SchetsEditor
             Schets.RedoStack.Clear();
         }
         public virtual void MuisLos(SchetsControl s, Point p)
-        {   //kwast = new SolidBrush(s.PenKleur);
+        {   
         }
         public abstract void MuisDrag(SchetsControl s, Point p);
         public abstract void Letter(SchetsControl s, char c);
@@ -200,8 +200,7 @@ namespace SchetsEditor
                 {
                     vorm.Kwast = new SolidBrush(s.PenKleur);
                     vorm.TekenPen = new Pen(s.PenKleur, vorm.Dikte);
-
-                    // verzamelingen werken nog niet?
+                    
                     if (vorm.VerzamelingNummer != 0)
                     {
                         var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
@@ -290,7 +289,7 @@ namespace SchetsEditor
     {
         public SolidBrush Kwast;
         public Point Startpunt;
-        public int VerzamelingNummer; // Momenteel alleen gebruikt voor pen-lijnen
+        public int VerzamelingNummer; 
         public Pen TekenPen;
         public int Dikte; // Alleen gebruikt in tweepuntvorm maar nodig voor aanpassingen
 
@@ -504,7 +503,7 @@ namespace SchetsEditor
         }
     }
         public RechthoekVorm(Brush kwast, Point startpunt, Point eindpunt, int dikte) : base(kwast, startpunt, eindpunt, dikte)
-        {   // omdat het moet?
+        {  
         }
         public override bool Geklikt(Point klik)
         {
@@ -537,7 +536,7 @@ namespace SchetsEditor
             xInBereik = klik.X > rect.Left - 2.5 && klik.X < rect.Right + 2.5;
             yInBereik = klik.Y > rect.Top - 2.5 && klik.Y < rect.Bottom + 2.5;
 
-            xOpRand = Math.Abs(klik.X - rect.Left) < 5 || Math.Abs(klik.X - rect.Right) < 5;      // ja dit moet echt een constante worden ooit
+            xOpRand = Math.Abs(klik.X - rect.Left) < 5 || Math.Abs(klik.X - rect.Right) < 5;      
             yOpRand = Math.Abs(klik.Y - rect.Top) < 5 || Math.Abs(klik.Y - rect.Bottom) < 5;
 
             return (xOpRand && yInBereik) || (yOpRand && xInBereik);
@@ -588,7 +587,6 @@ namespace SchetsEditor
             double helft1 = Math.Pow((x - middelX) / halveBreedte, 2);
             double helft2 = Math.Pow((y - middelY) / halveHoogte, 2);
             double res = helft1 + helft2;
-            //double res = Math.Pow(((klik.X - middelX) / halveBreedte) ,2) + Math.Pow(((klik.Y - middelY) / halveHoogte) ,2);
             return res;
         }
     }
