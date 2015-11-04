@@ -236,7 +236,7 @@ namespace SchetsEditor
             
             cbb = new ComboBox(); cbb.Location = new Point(240, 0); 
             cbb.DropDownStyle = ComboBoxStyle.DropDownList; 
-            cbb.SelectedValueChanged += schetscontrol.VeranderKleur;
+            cbb.SelectionChangeCommitted += schetscontrol.VeranderKleur;
             foreach (string k in kleuren)
                 cbb.Items.Add(k);
             cbb.SelectedIndex = 0;
