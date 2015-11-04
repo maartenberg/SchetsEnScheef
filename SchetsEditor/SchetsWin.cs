@@ -55,7 +55,7 @@ namespace SchetsEditor
             {
                 string bestandsnaam = opslagKiezer.FileName;
                 this.schetscontrol.Schets.NaarBestand(bestandsnaam, opslagKiezer.FilterIndex);
-                veranderd = false;
+                // Hier wordt this.veranderd NIET gereset, omdat de afbeelding hieruit niet kan worden ingelezen
             }
         }
         private void naarschetsbestand(object obj, EventArgs ea)
@@ -153,9 +153,10 @@ namespace SchetsEditor
         {   
             ToolStripMenuItem menu = new ToolStripMenuItem("File");
             menu.MergeAction = MergeAction.MatchOnly;
+            menu.DropDownItems.Add(new ToolStripSeparator());
             menu.DropDownItems.Add("Opslaan", null, naarschetsbestand);
-            menu.DropDownItems.Add("Exporteren", null, this.naarbestand);
             menu.DropDownItems.Add("Openen", null, this.vanbestand);
+            menu.DropDownItems.Add("Exporteren", null, this.naarbestand);
             menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }

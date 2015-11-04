@@ -333,6 +333,7 @@ namespace SchetsEditor
         }
         public static PuntVorm VanString(string s)
         {
+            // Formaat: [vormtype] [letter] [verzamelingnummer] [x] [y] [r] [g] [b]
             PuntVorm resultaat;
             char[] separators = new char[1] { ' ' };
             string[] parameters = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -394,56 +395,63 @@ namespace SchetsEditor
                 MessageBox.Show(s, "Onleesbare regel!"); 
                 return null;
             }
-            // Lees verzamelingnummer
-            int geladenVerzamelingNummer = int.Parse(parameters[1]);
+            try {
+                // Lees verzamelingnummer
+                int geladenVerzamelingNummer = int.Parse(parameters[1]);
 
-            // Lees startpunt, eindpunt
-            Point geladenStartpunt, geladenEindpunt;
-            int x1, y1, x2, y2;
-            x1 = int.Parse(parameters[2]);
-            y1 = int.Parse(parameters[3]);
-            geladenStartpunt = new Point(x1, y1);
-            x2 = int.Parse(parameters[4]);
-            y2 = int.Parse(parameters[5]);
-            geladenEindpunt = new Point(x2, y2);
+                // Lees startpunt, eindpunt
+                Point geladenStartpunt, geladenEindpunt;
+                int x1, y1, x2, y2;
+                x1 = int.Parse(parameters[2]);
+                y1 = int.Parse(parameters[3]);
+                geladenStartpunt = new Point(x1, y1);
+                x2 = int.Parse(parameters[4]);
+                y2 = int.Parse(parameters[5]);
+                geladenEindpunt = new Point(x2, y2);
 
-            // Lees kleur
-            int r, g, b;
-            r = int.Parse(parameters[6]);
-            g = int.Parse(parameters[7]);
-            b = int.Parse(parameters[8]);
-            Color kleur = Color.FromArgb(r, g, b);
-            SolidBrush kwast = new SolidBrush(kleur);
+                // Lees kleur
+                int r, g, b;
+                r = int.Parse(parameters[6]);
+                g = int.Parse(parameters[7]);
+                b = int.Parse(parameters[8]);
+                Color kleur = Color.FromArgb(r, g, b);
+                SolidBrush kwast = new SolidBrush(kleur);
 
-            int geladenDikte = int.Parse(parameters[9]);
+                int geladenDikte = int.Parse(parameters[9]);
 
-            switch (parameters[0])
+                switch (parameters[0])
+                {
+                    case "Lijn":
+                        resultaat = new LijnVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte, geladenVerzamelingNummer);
+                        break;
+                    case "Kader":
+                        resultaat = new KaderVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                        break;
+                    case "Rechthoek":
+                        resultaat = new RechthoekVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                        break;
+                    case "GevuldeEllips":
+                        resultaat = new VollipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                        break;
+                    case "Ellips":
+                        resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                        break;
+                    default:
+                        MessageBox.Show(s, "Onleesbare regel - niet-herkende vorm!");
+                        resultaat = null;
+                        break;
+                }
+            }
+            catch
             {
-                case "Lijn":
-                    resultaat = new LijnVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte, geladenVerzamelingNummer);
-                    break;
-                case "Kader":
-                    resultaat = new KaderVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                    break;
-                case "Rechthoek":
-                    resultaat = new RechthoekVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                    break;
-                case "GevuldeEllips":
-                    resultaat = new VollipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                    break;
-                case "Ellips":
-                    resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                    break;
-                default:
-                    MessageBox.Show(s, "Onleesbare regel - niet-herkende vorm!");
-                    resultaat = null;
-                    break;
+                MessageBox.Show(s, "Onleesbare regel in bestand!");
+                resultaat = null;
             }
             return resultaat;
         }
         public override string ToString()
         {
-            // Formaat: "[vormtype] [verzamelingnummer] [startx] [starty] [eindx] [eindy] [r] [g] [b]"
+            // Formaat: "[vormtype] [verzamelingnummer] [startx] [starty] [eindx] [eindy] [r] [g] [b] [dikte]"
             string[] parameters = 
                 { vormType, VerzamelingNummer.ToString(),
                     Startpunt.X.ToString(), Startpunt.Y.ToString(),
@@ -504,8 +512,7 @@ namespace SchetsEditor
         }
     }
         public RechthoekVorm(Brush kwast, Point startpunt, Point eindpunt, int dikte) : base(kwast, startpunt, eindpunt, dikte)
-        {   // omdat het moet?
-        }
+        { }
         public override bool Geklikt(Point klik)
         {
             return rect.Contains(klik);
@@ -534,11 +541,11 @@ namespace SchetsEditor
             // Het is 'raak' als een van twee condities waar is:
             //  1. X ligt richtbij een rand en Y ligt tussen de boven- en onderkant -> klik op linker- of rechterrand   (xOpRand && yInBereik)
             //  2. Y ligt dichtbij een rand en X ligt tussen de linker- en rechterkant -> klik op boven- of onderrand   (yOpRand && xInBereik)
-            xInBereik = klik.X > rect.Left - 2.5 && klik.X < rect.Right + 2.5;
-            yInBereik = klik.Y > rect.Top - 2.5 && klik.Y < rect.Bottom + 2.5;
+            xInBereik = klik.X > rect.Left - 2.5 - Dikte && klik.X < rect.Right + 2.5 + Dikte;
+            yInBereik = klik.Y > rect.Top - 2.5 - Dikte && klik.Y < rect.Bottom + 2.5 + Dikte;
 
-            xOpRand = Math.Abs(klik.X - rect.Left) < 5 || Math.Abs(klik.X - rect.Right) < 5;      // ja dit moet echt een constante worden ooit
-            yOpRand = Math.Abs(klik.Y - rect.Top) < 5 || Math.Abs(klik.Y - rect.Bottom) < 5;
+            xOpRand = Math.Abs(klik.X - rect.Left) < 5 + 0.2 * Dikte || Math.Abs(klik.X - rect.Right) < 5 + 0.2 * Dikte;
+            yOpRand = Math.Abs(klik.Y - rect.Top) < 5 + 0.2 * Dikte|| Math.Abs(klik.Y - rect.Bottom) < 5 + 0.2 * Dikte;
 
             return (xOpRand && yInBereik) || (yOpRand && xInBereik);
         }
@@ -548,7 +555,7 @@ namespace SchetsEditor
         }
     }
 
-    public class EllipsVorm : KaderVorm
+    public class EllipsVorm : TweePuntVorm
     {
         protected override string vormType
         {

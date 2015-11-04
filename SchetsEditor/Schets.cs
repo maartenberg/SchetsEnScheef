@@ -137,11 +137,6 @@ namespace SchetsEditor
             bestand.Close();
         }
 
-        public void VanBestand(string bestandsnaam)
-        {
-            Bitmap geladen = new Bitmap(bestandsnaam);
-            bitmap = geladen;
-        }
         public void LeesBestand(string bestandsnaam)
         {
             StreamReader bestand = new StreamReader(bestandsnaam);

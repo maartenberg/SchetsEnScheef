@@ -22,8 +22,8 @@ namespace SchetsEditor
         {   ToolStripDropDownItem menu;
             menu = new ToolStripMenuItem("File");
             menu.DropDownItems.Add("Nieuw", null, this.nieuw);
-            menu.DropDownItems.Add("Open in venster", null, this.openvenster);
-            menu.DropDownItems.Add("Exit", null, this.afsluiten);
+            menu.DropDownItems.Add("Open schets in nieuw venster", null, this.openvenster);
+            menu.DropDownItems.Add("Afsluiten", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }
         private void maakHelpMenu()
@@ -64,7 +64,8 @@ namespace SchetsEditor
             }
         }
         private void afsluiten(object sender, EventArgs e)
-        {   this.Close();
+        {
+            this.Close();
         }
     }
 }
