@@ -24,7 +24,7 @@ namespace SchetsEditor
             Schets.RedoStack.Clear();
         }
         public virtual void MuisLos(SchetsControl s, Point p)
-        {   //kwast = new SolidBrush(s.PenKleur);
+        {   
         }
         public abstract void MuisDrag(SchetsControl s, Point p);
         public abstract void Letter(SchetsControl s, char c);
@@ -201,7 +201,6 @@ namespace SchetsEditor
                     vorm.Kwast = new SolidBrush(s.PenKleur);
                     vorm.TekenPen = new Pen(s.PenKleur, vorm.Dikte);
 
-                    // verzamelingen werken nog niet?
                     if (vorm.VerzamelingNummer != 0)
                     {
                         var verzameling = s.Schets.Vormen.FindAll(puvorm => puvorm.VerzamelingNummer == vorm.VerzamelingNummer && puvorm.GetType() == vorm.GetType());
@@ -290,7 +289,7 @@ namespace SchetsEditor
     {
         public SolidBrush Kwast;
         public Point Startpunt;
-        public int VerzamelingNummer; // Momenteel alleen gebruikt voor pen-lijnen
+        public int VerzamelingNummer; 
         public Pen TekenPen;
         public int Dikte; // Alleen gebruikt in tweepuntvorm maar nodig voor aanpassingen
 
@@ -396,51 +395,51 @@ namespace SchetsEditor
                 return null;
             }
             try {
-                // Lees verzamelingnummer
-                int geladenVerzamelingNummer = int.Parse(parameters[1]);
+            // Lees verzamelingnummer
+            int geladenVerzamelingNummer = int.Parse(parameters[1]);
 
-                // Lees startpunt, eindpunt
-                Point geladenStartpunt, geladenEindpunt;
-                int x1, y1, x2, y2;
-                x1 = int.Parse(parameters[2]);
-                y1 = int.Parse(parameters[3]);
-                geladenStartpunt = new Point(x1, y1);
-                x2 = int.Parse(parameters[4]);
-                y2 = int.Parse(parameters[5]);
-                geladenEindpunt = new Point(x2, y2);
+            // Lees startpunt, eindpunt
+            Point geladenStartpunt, geladenEindpunt;
+            int x1, y1, x2, y2;
+            x1 = int.Parse(parameters[2]);
+            y1 = int.Parse(parameters[3]);
+            geladenStartpunt = new Point(x1, y1);
+            x2 = int.Parse(parameters[4]);
+            y2 = int.Parse(parameters[5]);
+            geladenEindpunt = new Point(x2, y2);
 
-                // Lees kleur
-                int r, g, b;
-                r = int.Parse(parameters[6]);
-                g = int.Parse(parameters[7]);
-                b = int.Parse(parameters[8]);
-                Color kleur = Color.FromArgb(r, g, b);
-                SolidBrush kwast = new SolidBrush(kleur);
+            // Lees kleur
+            int r, g, b;
+            r = int.Parse(parameters[6]);
+            g = int.Parse(parameters[7]);
+            b = int.Parse(parameters[8]);
+            Color kleur = Color.FromArgb(r, g, b);
+            SolidBrush kwast = new SolidBrush(kleur);
 
-                int geladenDikte = int.Parse(parameters[9]);
+            int geladenDikte = int.Parse(parameters[9]);
 
-                switch (parameters[0])
-                {
-                    case "Lijn":
-                        resultaat = new LijnVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte, geladenVerzamelingNummer);
-                        break;
-                    case "Kader":
-                        resultaat = new KaderVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                        break;
-                    case "Rechthoek":
-                        resultaat = new RechthoekVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                        break;
-                    case "GevuldeEllips":
-                        resultaat = new VollipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                        break;
-                    case "Ellips":
-                        resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
-                        break;
-                    default:
-                        MessageBox.Show(s, "Onleesbare regel - niet-herkende vorm!");
-                        resultaat = null;
-                        break;
-                }
+            switch (parameters[0])
+            {
+                case "Lijn":
+                    resultaat = new LijnVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte, geladenVerzamelingNummer);
+                    break;
+                case "Kader":
+                    resultaat = new KaderVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                    break;
+                case "Rechthoek":
+                    resultaat = new RechthoekVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                    break;
+                case "GevuldeEllips":
+                    resultaat = new VollipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                    break;
+                case "Ellips":
+                    resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
+                    break;
+                default:
+                    MessageBox.Show(s, "Onleesbare regel - niet-herkende vorm!");
+                    resultaat = null;
+                    break;
+            }
             }
             catch
             {
@@ -595,7 +594,6 @@ namespace SchetsEditor
             double helft1 = Math.Pow((x - middelX) / halveBreedte, 2);
             double helft2 = Math.Pow((y - middelY) / halveHoogte, 2);
             double res = helft1 + helft2;
-            //double res = Math.Pow(((klik.X - middelX) / halveBreedte) ,2) + Math.Pow(((klik.Y - middelY) / halveHoogte) ,2);
             return res;
         }
     }

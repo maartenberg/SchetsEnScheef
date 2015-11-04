@@ -22,7 +22,7 @@ namespace SchetsEditor
 
         private void veranderAfmeting(object o, EventArgs ea)
         {
-            schetscontrol.Size = new Size ( this.ClientSize.Width  - 70
+            schetscontrol.Size = new Size ( this.ClientSize.Width  - 130
                                           , this.ClientSize.Height - 50);
             paneel.Location = new Point(64, this.ClientSize.Height - 30);
         }
@@ -113,11 +113,11 @@ namespace SchetsEditor
                                  , "Aangepast"
                                  };
 
-            this.ClientSize = new Size(700, 650);
+            this.ClientSize = new Size(700, 500);
             huidigeTool = deTools[0];
 
             schetscontrol = new SchetsControl();
-            schetscontrol.Location = new Point(64, 10);
+            schetscontrol.Location = new Point(120, 10);
             schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
                                        {   vast=true; veranderd = true; 
                                            huidigeTool.MuisVast(schetscontrol, mea.Location); 
@@ -196,13 +196,18 @@ namespace SchetsEditor
             {
                 RadioButton b = new RadioButton();
                 b.Appearance = Appearance.Button;
-                b.Size = new Size(45, 62);
-                b.Location = new Point(10, 10 + t * 62);
+                b.Size = new Size(50, 50);
+                if (t % 2 == 0)
+                {
+                    b.Location = new Point(10, 10 + t / 2 * 50);
+                }
+                else
+                {
+                    b.Location = new Point(60, 10 + t / 2 * 50);
+                }
                 b.Tag = tool;
-                b.Text = tool.ToString();
                 b.Image = (Image)resourcemanager.GetObject(tool.ToString());
-                b.TextAlign = ContentAlignment.TopCenter;
-                b.ImageAlign = ContentAlignment.BottomCenter;
+                b.ImageAlign = ContentAlignment.MiddleCenter;
                 b.Click += this.klikToolButton;
                 this.Controls.Add(b);
                 if (t == 0) b.Select();
