@@ -33,7 +33,7 @@ namespace SchetsEditor
             menuStrip.Items.Add(menu);
         }
         private void about(object o, EventArgs ea)
-        {   MessageBox.Show("Schets versie 1.0\n(c) UU Informatica 2010 \n\nWith new features by Maarten van den Berg\n& Machteld Hamers"
+        {   MessageBox.Show("Schetsy versie 1.1\n(c) UU Informatica 2010-2015 \n\nWith new features by Maarten van den Berg\n& Machteld Hamers"
                            , "About \"Schets\""
                            , MessageBoxButtons.OK
                            , MessageBoxIcon.Information
