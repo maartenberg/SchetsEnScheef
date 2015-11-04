@@ -47,8 +47,8 @@ namespace SchetsEditor
         {
             SaveFileDialog opslagKiezer = new SaveFileDialog();
 
-            opslagKiezer.Filter = "PNG-bestand|*.png|JPG-bestand|*.jpg|BMP-bestand|*.bmp";
-            opslagKiezer.Title = "Schets opslaan";
+            opslagKiezer.Filter = "PNG-file|*.png|JPG-file|*.jpg|BMP-file|*.bmp";
+            opslagKiezer.Title = "Save Schets";
 
             DialogResult resultaat = opslagKiezer.ShowDialog();
             if (resultaat == DialogResult.OK)
@@ -62,8 +62,8 @@ namespace SchetsEditor
         {
             SaveFileDialog opslagKiezer = new SaveFileDialog();
 
-            opslagKiezer.Filter = "SCHETS-bestand|*.SCHETS";
-            opslagKiezer.Title = "Schets opslaan";
+            opslagKiezer.Filter = "SCHETS-file|*.SCHETS";
+            opslagKiezer.Title = "Save Schets";
 
             DialogResult resultaat = opslagKiezer.ShowDialog();
             if (resultaat == DialogResult.OK)
@@ -83,9 +83,9 @@ namespace SchetsEditor
         {
             OpenFileDialog openKiezer = new OpenFileDialog();
 
-            openKiezer.Filter = "Schetsbestanden (*.SCHETS)|*.SCHETS|" +
-                                "Alle bestanden (*.*)|*.*";
-            openKiezer.Title = "Schets openen in huidig venster";
+            openKiezer.Filter = "Schets-files (*.SCHETS)|*.SCHETS|" +
+                                "All files (*.*)|*.*";
+            openKiezer.Title = "Open Schets in current window";
 
             DialogResult resultaat = openKiezer.ShowDialog();
             if (resultaat == DialogResult.OK)
@@ -110,7 +110,7 @@ namespace SchetsEditor
                                     };
             String[] deKleuren = { "Black", "Red", "Green", "Blue"
                                  , "Yellow", "Magenta", "Cyan", "White"
-                                 , "Aangepast"
+                                 , "Other"
                                  };
 
             this.ClientSize = new Size(700, 500);
@@ -153,10 +153,10 @@ namespace SchetsEditor
         {   
             ToolStripMenuItem menu = new ToolStripMenuItem("File");
             menu.MergeAction = MergeAction.MatchOnly;
-            menu.DropDownItems.Add("Opslaan", null, naarschetsbestand);
-            menu.DropDownItems.Add("Exporteren", null, this.naarbestand);
-            menu.DropDownItems.Add("Openen", null, this.vanbestand);
-            menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
+            menu.DropDownItems.Add("Save", null, naarschetsbestand);
+            menu.DropDownItems.Add("Export", null, this.naarbestand);
+            menu.DropDownItems.Add("Open", null, this.vanbestand);
+            menu.DropDownItems.Add("Exit", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }
 
@@ -176,12 +176,12 @@ namespace SchetsEditor
 
         private void maakAktieMenu(String[] kleuren)
         {   
-            ToolStripMenuItem menu = new ToolStripMenuItem("Aktie");
+            ToolStripMenuItem menu = new ToolStripMenuItem("Action");
             menu.DropDownItems.Add("Clear", null, schetscontrol.Schoon );
-            menu.DropDownItems.Add("Roteer", null, schetscontrol.Roteer );
+            menu.DropDownItems.Add("Rotate", null, schetscontrol.Roteer );
             menu.DropDownItems.Add("Undo", null, schetscontrol.Undo);
             menu.DropDownItems.Add("Redo", null, schetscontrol.Redo);
-            ToolStripMenuItem submenu = new ToolStripMenuItem("Kies kleur");
+            ToolStripMenuItem submenu = new ToolStripMenuItem("Choose Colour");
             foreach (string k in kleuren)
                 submenu.DropDownItems.Add(k, null, schetscontrol.VeranderKleurViaMenu);
             menu.DropDownItems.Add(submenu);
@@ -234,7 +234,7 @@ namespace SchetsEditor
             paneel.Controls.Add(b);
             
             l = new Label();  
-            l.Text = "Penkleur:"; 
+            l.Text = "Pen colour:"; 
             l.Location = new Point(160, 3); 
             l.AutoSize = true;               
             paneel.Controls.Add(l);
@@ -263,7 +263,7 @@ namespace SchetsEditor
             paneel.Controls.Add(b);
 
             l = new Label();
-            l.Text = "Pendikte:";
+            l.Text = "Pen weight:";
             l.Location = new Point(510, 3);
             l.AutoSize = true;
             paneel.Controls.Add(l);
@@ -291,8 +291,8 @@ namespace SchetsEditor
         private void AfsluitVrager(object o, FormClosingEventArgs fcea)
         {
             if (!veranderd) return;
-            DialogResult zeker = MessageBox.Show("Weet je zeker dat je wilt sluiten?", 
-                "Onopgeslagen wijzigingen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult zeker = MessageBox.Show("Are you sure you want to quit?", 
+                "Unsaved changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (zeker != DialogResult.Yes)
             {
                 fcea.Cancel = true;

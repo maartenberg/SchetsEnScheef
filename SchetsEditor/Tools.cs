@@ -390,7 +390,7 @@ namespace SchetsEditor
             if (parameters.Length != 10)
             {
                 //  fout!
-                MessageBox.Show(s, "Onleesbare regel!"); 
+                MessageBox.Show(s, "Unreadable line!"); 
                 return null;
             }
             // Lees verzamelingnummer
@@ -434,7 +434,7 @@ namespace SchetsEditor
                     resultaat = new EllipsVorm(kwast, geladenStartpunt, geladenEindpunt, geladenDikte);
                     break;
                 default:
-                    MessageBox.Show(s, "Onleesbare regel - niet-herkende vorm!");
+                    MessageBox.Show(s, "Unreadable line - non-recognised shape!");
                     resultaat = null;
                     break;
             }

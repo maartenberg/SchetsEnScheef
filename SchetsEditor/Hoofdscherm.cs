@@ -21,20 +21,20 @@ namespace SchetsEditor
         private void maakFileMenu()
         {   ToolStripDropDownItem menu;
             menu = new ToolStripMenuItem("File");
-            menu.DropDownItems.Add("Nieuw", null, this.nieuw);
-            menu.DropDownItems.Add("Open in venster", null, this.openvenster);
+            menu.DropDownItems.Add("New", null, this.nieuw);
+            menu.DropDownItems.Add("Open in window", null, this.openvenster);
             menu.DropDownItems.Add("Exit", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }
         private void maakHelpMenu()
         {   ToolStripDropDownItem menu;
             menu = new ToolStripMenuItem("Help");
-            menu.DropDownItems.Add("Over \"Schets\"", null, this.about);
+            menu.DropDownItems.Add("About \"Schets\"", null, this.about);
             menuStrip.Items.Add(menu);
         }
         private void about(object o, EventArgs ea)
-        {   MessageBox.Show("Schets versie 1.0\n(c) UU Informatica 2010"
-                           , "Over \"Schets\""
+        {   MessageBox.Show("Schets versie 1.0\n(c) UU Informatica 2010 \n\nWith new features by Maarten van den Berg\n& Machteld Hamers"
+                           , "About \"Schets\""
                            , MessageBoxButtons.OK
                            , MessageBoxIcon.Information
                            );
@@ -49,9 +49,9 @@ namespace SchetsEditor
         {
             OpenFileDialog openKiezer = new OpenFileDialog();
 
-            openKiezer.Filter = "Schetsbestanden (*.SCHETS)|*.SCHETS|" +
-                                "Alle bestanden (*.*)|*.*";
-            openKiezer.Title = "Schets openen in nieuw venster";
+            openKiezer.Filter = "Schets-files (*.SCHETS)|*.SCHETS|" +
+                                "Alle files (*.*)|*.*";
+            openKiezer.Title = "Open Schets in new window";
 
             DialogResult resultaat = openKiezer.ShowDialog();
             if (resultaat == DialogResult.OK)
