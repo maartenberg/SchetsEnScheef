@@ -109,7 +109,8 @@ namespace SchetsEditor
                                     , new GumTool()
                                     };
             String[] deKleuren = { "Black", "Red", "Green", "Blue"
-                                 , "Yellow", "Magenta", "Cyan" 
+                                 , "Yellow", "Magenta", "Cyan", "White"
+                                 , "Aangepast"
                                  };
 
             this.ClientSize = new Size(700, 500);

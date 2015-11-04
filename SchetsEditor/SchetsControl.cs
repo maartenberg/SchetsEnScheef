@@ -7,6 +7,7 @@ using System.IO;
 namespace SchetsEditor
 {   public class SchetsControl : UserControl
     {   private Schets schets;
+        private ColorDialog kleurenKiezer;
         private Color penkleur;
 
         public Color PenKleur
@@ -19,6 +20,7 @@ namespace SchetsEditor
         {   this.BorderStyle = BorderStyle.Fixed3D;
             this.DoubleBuffered = true;
             this.schets = new Schets();
+            this.kleurenKiezer = new ColorDialog();
             this.Paint += this.teken;
             this.Resize += this.veranderAfmeting;
             this.veranderAfmeting(null, null);
@@ -59,11 +61,31 @@ namespace SchetsEditor
 
         public void VeranderKleur(object obj, EventArgs ea)
         {   string kleurNaam = ((ComboBox)obj).Text;
-            penkleur = Color.FromName(kleurNaam);
+            if (kleurNaam != "Aangepast")
+            {
+                penkleur = Color.FromName(kleurNaam);
+            }
+            else
+            {
+                DialogResult resultaat = kleurenKiezer.ShowDialog();
+                if (resultaat == DialogResult.OK)
+                    penkleur = kleurenKiezer.Color;
+            }
         }
         public void VeranderKleurViaMenu(object obj, EventArgs ea)
         {   string kleurNaam = ((ToolStripMenuItem)obj).Text;
-            penkleur = Color.FromName(kleurNaam);
+            if (kleurNaam != "Aangepast")
+            {
+                penkleur = Color.FromName(kleurNaam);
+                return;
+            }
+            else
+            {
+                DialogResult resultaat = kleurenKiezer.ShowDialog();
+                if (resultaat == DialogResult.OK)
+                    penkleur = kleurenKiezer.Color;
+            }
+            
         }
         public void VanBestand(string bestandsnaam)
         {
