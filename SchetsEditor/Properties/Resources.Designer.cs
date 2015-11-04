@@ -113,6 +113,16 @@ namespace SchetsEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap regenboog {
+            get {
+                object obj = ResourceManager.GetObject("regenboog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tekst {
             get {
                 object obj = ResourceManager.GetObject("tekst", resourceCulture);

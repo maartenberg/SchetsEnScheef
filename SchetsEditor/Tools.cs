@@ -177,7 +177,7 @@ namespace SchetsEditor
             new Color[8] { Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Purple, Color.Violet }
             );
 
-        public override string ToString() { return "Regenboog"; }
+        public override string ToString() { return "regenboog"; }
 
         public override void MuisDrag(SchetsControl s, Point p)
         {
