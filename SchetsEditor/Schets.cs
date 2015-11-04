@@ -17,7 +17,7 @@ namespace SchetsEditor
         {
             bitmap = new Bitmap(1, 1);
             Vormen = new List<PuntVorm>();
-            RechthoekVorm achtergrond = new RechthoekVorm(Brushes.White, new Point(0, 0), new Point(1, 1));
+            RechthoekVorm achtergrond = new RechthoekVorm(Brushes.White, new Point(0, 0), new Point(1, 1), 1);
             Vormen.Add(achtergrond);
         }
         public Graphics BitmapGraphics
@@ -33,7 +33,6 @@ namespace SchetsEditor
         }
         public void Teken(Graphics gr)
         {
-            //gr.DrawImage(bitmap, 0, 0);
             foreach (PuntVorm vorm in Vormen)
             {
                 vorm.Teken(gr);
@@ -41,10 +40,8 @@ namespace SchetsEditor
         }
         public void Schoon()
         {
-            //Graphics gr = Graphics.FromImage(bitmap);
-            //gr.FillRectangle(Brushes.White, 0, 0, bitmap.Width, bitmap.Height);
             Vormen = new List<PuntVorm>();
-            var bg = new RechthoekVorm(Brushes.White, new Point(0,0), new Point(grootte.Width, grootte.Height)); // kan beter?
+            var bg = new RechthoekVorm(Brushes.White, new Point(0,0), new Point(grootte.Width, grootte.Height), 1); 
             Vormen.Add(bg);
         }
         public void Roteer()
@@ -160,7 +157,7 @@ namespace SchetsEditor
                     case 8:
                         gelezenVorm = TekstVorm.VanString(inhoud);
                         break;
-                    case 9:
+                    case 10:
                         gelezenVorm = TweePuntVorm.VanString(inhoud);
                         break;
                 }

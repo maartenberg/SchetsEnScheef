@@ -9,9 +9,13 @@ namespace SchetsEditor
     {   private Schets schets;
         private ColorDialog kleurenKiezer;
         private Color penkleur;
+        private int pendikte;
 
         public Color PenKleur
         { get { return penkleur; }
+        }
+        public int PenDikte
+        { get { return pendikte; }
         }
         public Schets Schets
         { get { return schets;   }
@@ -86,6 +90,11 @@ namespace SchetsEditor
                     penkleur = kleurenKiezer.Color;
             }
             
+        }
+        public void VeranderDikte(object ob, EventArgs ea)
+        {
+            int nieuweDikte = (int)((NumericUpDown)ob).Value;
+            this.pendikte = nieuweDikte;
         }
         public void VanBestand(string bestandsnaam)
         {

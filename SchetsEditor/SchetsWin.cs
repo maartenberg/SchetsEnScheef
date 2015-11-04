@@ -113,7 +113,7 @@ namespace SchetsEditor
                                  , "Aangepast"
                                  };
 
-            this.ClientSize = new Size(700, 500);
+            this.ClientSize = new Size(700, 650);
             huidigeTool = deTools[0];
 
             schetscontrol = new SchetsControl();
@@ -212,10 +212,10 @@ namespace SchetsEditor
         private void maakAktieButtons(String[] kleuren)
         {   
             paneel = new Panel();
-            paneel.Size = new Size(600, 24);
+            paneel.Size = new Size(625, 24);
             this.Controls.Add(paneel);
             
-            Button b; Label l; ComboBox cbb;
+            Button b; Label l; ComboBox cbb; NumericUpDown num;
             b = new Button(); 
             b.Text = "Clear";  
             b.Location = new Point(  0, 0); 
@@ -230,31 +230,46 @@ namespace SchetsEditor
             
             l = new Label();  
             l.Text = "Penkleur:"; 
-            l.Location = new Point(180, 3); 
+            l.Location = new Point(160, 3); 
             l.AutoSize = true;               
             paneel.Controls.Add(l);
             
-            cbb = new ComboBox(); cbb.Location = new Point(240, 0); 
+            cbb = new ComboBox(); cbb.Location = new Point(220, 0); 
             cbb.DropDownStyle = ComboBoxStyle.DropDownList; 
             cbb.SelectionChangeCommitted += schetscontrol.VeranderKleur;
             foreach (string k in kleuren)
                 cbb.Items.Add(k);
             cbb.SelectedIndex = 0;
+            schetscontrol.VeranderKleur(cbb, null);  // zodat bovenste kleur ook standaard wordt ingesteld
             paneel.Controls.Add(cbb);
 
             b = new Button();
             b.Text = "Undo";
-            b.Location = new Point(370, 0);
+            b.Location = new Point(350, 0);
             b.AutoSize = true;
             b.Click += schetscontrol.Undo;
             paneel.Controls.Add(b);
 
             b = new Button();
             b.Text = "Redo";
-            b.Location = new Point(450, 0);
+            b.Location = new Point(430, 0);
             b.AutoSize = true;
             b.Click += schetscontrol.Redo;
             paneel.Controls.Add(b);
+
+            l = new Label();
+            l.Text = "Pendikte:";
+            l.Location = new Point(510, 3);
+            l.AutoSize = true;
+            paneel.Controls.Add(l);
+
+            num = new NumericUpDown();
+            num.Location = new Point(570, 0);
+            num.Minimum = 1;
+            num.Maximum = 50;
+            num.Width = 50;
+            num.ValueChanged += schetscontrol.VeranderDikte;
+            paneel.Controls.Add(num);
         }
 
         private void InitializeComponent()
